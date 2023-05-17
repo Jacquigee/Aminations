@@ -3,13 +3,17 @@ package com.example.aminations
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.compose.animation.*
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Surface
+import androidx.compose.foundation.layout.height
 import androidx.compose.material.Text
-import androidx.compose.runtime.Composable
+import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import com.example.aminations.ui.theme.AminationsTheme
 
 class MainActivity : ComponentActivity() {
@@ -17,27 +21,31 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             AminationsTheme {
-                // A surface container using the 'background' color from the theme
-                Surface(
-                    modifier = Modifier.fillMaxSize(),
-                    color = MaterialTheme.colors.background
-                ) {
-                    Greeting("Android")
-                }
+
             }
         }
     }
 }
 
+@Preview
 @Composable
-fun Greeting(name: String) {
-    Text(text = "Hello $name!")
-}
+fun Greeting() {
+    var visible by remember {
+        mutableStateOf(true)
+    }
+    val density = LocalDensity.current
+    AnimatedVisibility(visible = visible,
+        enter = slideInVertically {
+            with(density) { -40.dp.roundToPx() }
+        } + expandVertically(expandFrom = Alignment.Top)
+                + fadeIn(initialAlpha = 0.3f),
+        exit = slideOutVertically() + shrinkVertically() + fadeOut()) {
+        Text(
+            text = "Hello",
+            Modifier
+                .fillMaxSize()
+                .height(200.dp)
+        )
 
-@Preview(showBackground = true)
-@Composable
-fun DefaultPreview() {
-    AminationsTheme {
-        Greeting("Android")
     }
 }
